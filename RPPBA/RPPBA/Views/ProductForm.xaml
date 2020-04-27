@@ -1,0 +1,63 @@
+﻿<Window x:Class="RPPBA.Views.ProductForm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RPPBA.Views"
+        mc:Ignorable="d"
+        Title="ProductForm"  Height="450" Width="300">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition/>
+            <RowDefinition Height="5*"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Label Grid.Row="0" Background="#FECFD2" Content="Добавление товара" BorderThickness="0" FontSize="15" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width=".7*"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition Height="4*"/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Content="Наименование" Grid.Column="0" HorizontalContentAlignment="Left" Margin="6" FontSize="14"></Label>
+            <Label Grid.Row="1" Content="Цена" Grid.Column="0" HorizontalContentAlignment="Left" Margin="6" FontSize="14"></Label>
+            <Label Grid.Row="2" Content="Описание" Grid.Column="0" HorizontalContentAlignment="Left" Margin="6" FontSize="14"></Label>
+            <Label Grid.Row="3" Content="Произведено" Grid.Column="0" HorizontalContentAlignment="Left" Margin="6" FontSize="14"></Label>
+            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="0" Grid.Column="1">
+                <TextBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"></Setter>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="1" Grid.Column="1">
+                <TextBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"></Setter>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="2" Grid.Column="1">
+                <TextBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"></Setter>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="3" Grid.Column="1">
+                <TextBox.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="5"></Setter>
+                    </Style>
+                </TextBox.Resources>
+            </TextBox>
+        </Grid>
+        <Button  Background="#FECFD2" Grid.Row="2" Content ="Добавить" FontSize="15" BorderThickness="0"></Button>
+    </Grid>
+</Window>
