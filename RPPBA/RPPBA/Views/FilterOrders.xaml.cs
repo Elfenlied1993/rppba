@@ -13,16 +13,16 @@ using System.Windows.Shapes;
 namespace RPPBA.Views
 {
     /// <summary>
-    /// Interaction logic for ClientForm.xaml
+    /// Interaction logic for FilterOrders.xaml
     /// </summary>
-    public partial class ClientForm : Window
+    public partial class FilterOrders : Window
     {
-        public ClientForm()
+        public FilterOrders()
         {
             InitializeComponent();
         }
 
-        private void AddClient_OnClick(object sender, RoutedEventArgs e)
+        private void Filter_OnClick(object sender, RoutedEventArgs e)
         {
             throw new NotImplementedException();
         }

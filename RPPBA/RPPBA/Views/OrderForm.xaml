@@ -30,39 +30,51 @@
             <Label Grid.Row="0" Content="Клиент" Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="6,0,6,39" FontSize="14" Grid.ColumnSpan="2" Grid.RowSpan="2"></Label>
             <Label Grid.Row="1" Content="Дата отгрузки" Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="6,0,6,38" FontSize="14" Grid.ColumnSpan="2" Grid.RowSpan="2"></Label>
             <Label Grid.Row="2" Content="Адрес" Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="6,0,6,0" FontSize="14" Grid.ColumnSpan="2"></Label>
-            <ComboBox Margin="7,7,7,7"  Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="0" Grid.Column="2">
+            <ComboBox x:Name="Client" Margin="7,7,37,7"  Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="0" Grid.Column="2">
                 <ComboBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </ComboBox.Resources>
             </ComboBox>
-            <TextBox Margin="7,7,7,7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="1" Grid.Column="2">
+            <TextBox x:Name="Date" Margin="7,7,37,7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="1" Grid.Column="2">
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </TextBox.Resources>
             </TextBox>
-            <TextBox Margin="7,7,7,7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="2" Grid.Column="2">
+            <TextBox  x:Name="Address" ToolTip="Введите адрес в формате: страна, регион, город, улица, дом" Margin="7,7,37,7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="2" Grid.Column="2">
                 <TextBox.Resources>
+                    <Style TargetType="ToolTip">
+                        <Setter Property="Background" Value="#FECFD2"></Setter>
+                        <Setter Property="FontSize" Value="13"></Setter>
+                    </Style>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </TextBox.Resources>
             </TextBox>
             <Label VerticalContentAlignment="Bottom" FontSize="14" Content="Товары" Margin="10,38,10,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" BorderThickness="0,0,0,1" BorderBrush="Black" Grid.RowSpan="2"></Label>
-            <ScrollViewer Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3"></ScrollViewer>
+            <ScrollViewer x:Name="ProductScroll"  Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="3">
+            </ScrollViewer>
             <Label Grid.Row="5" Grid.Column="0" Content="Сумма заказа" FontSize="14" VerticalContentAlignment="Center"></Label>
-            <StackPanel Orientation="Horizontal" Grid.ColumnSpan="2"  Grid.Row="5" Grid.Column="1"  Margin="6">
-                <Border CornerRadius="5" HorizontalAlignment="Left" Height="22" Width="230" BorderThickness="1" BorderBrush="DarkRed" Background="FloralWhite" >
-                    <Label >
+            <Button Click="AddProduct_OnClick" Grid.Row="3" FontSize="15" Padding="0,-3,0,0" x:Name="AddProduct" HorizontalContentAlignment="Center" Content="+" Grid.Column="1" VerticalAlignment="Center" Margin="0,0,20,0"  HorizontalAlignment="Right" Width="20" Height="20">
+                <Button.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="10"></Setter>
+                    </Style>
+                </Button.Resources>
+            </Button>
+            <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="1"  Margin="4">
+                <Border Margin="0,0,0,0" CornerRadius="5" HorizontalAlignment="Left" Height="22" Width="230" BorderThickness="1" BorderBrush="DarkRed" Background="FloralWhite" >
+                    <Label x:Name="Sum">
                     </Label>
                 </Border>
                 <Label Margin="6,0,0,0" Content="BYN"></Label>
             </StackPanel>
             
         </Grid>
-        <Button  Background="#FECFD2" Grid.Row="2" Content ="Добавить" FontSize="18" BorderThickness="0"></Button>
+        <Button x:Name="AddOrder" Click="AddOrder_OnClick" Background="#FECFD2" Grid.Row="2" Content ="Добавить" FontSize="18" BorderThickness="0"></Button>
     </Grid>
 </Window>

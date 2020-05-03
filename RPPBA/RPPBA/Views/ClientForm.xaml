@@ -33,49 +33,42 @@
             <Label Grid.Row="3" Content="Телефон" Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="6,0" FontSize="13"></Label>
             <Label Grid.Row="4" Content="Адрес" Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="6,0" FontSize="13"></Label>
             <Label Visibility="Hidden" Grid.Row="5" Content="Скидка" Grid.Column="0" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Margin="6,0" FontSize="13"></Label>
-            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="0" Grid.Column="1">
+            <TextBox x:Name="Name" Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="0" Grid.Column="1">
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </TextBox.Resources>
             </TextBox>
-            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="1" Grid.Column="1">
+            <TextBox x:Name="Bank" Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="1" Grid.Column="1">
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </TextBox.Resources>
             </TextBox>
-            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="2" Grid.Column="1">
+            <TextBox x:Name="Contact" Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="2" Grid.Column="1">
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </TextBox.Resources>
             </TextBox>
-            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="3" Grid.Column="1">
+            <TextBox x:Name="Phone" Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="3" Grid.Column="1">
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </TextBox.Resources>
             </TextBox>
-            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="4" Grid.Column="1">
+            <TextBox x:Name="Address" Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="4" Grid.Column="1">
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
                     </Style>
                 </TextBox.Resources>
             </TextBox>
-            <TextBox Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="4" Grid.Column="1">
-                <TextBox.Resources>
-                    <Style TargetType="Border">
-                        <Setter Property="CornerRadius" Value="5"></Setter>
-                    </Style>
-                </TextBox.Resources>
-            </TextBox>
-            <TextBox Visibility="Hidden" Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="5" Grid.Column="1">
+            <TextBox x:Name="Discount" Visibility="Hidden" Margin="7" Background="FloralWhite" BorderBrush="DarkRed" Grid.Row="5" Grid.Column="1">
                 <TextBox.Resources>
                     <Style TargetType="Border">
                         <Setter Property="CornerRadius" Value="5"></Setter>
@@ -83,6 +76,6 @@
                 </TextBox.Resources>
             </TextBox>
         </Grid>
-        <Button  Background="#FECFD2" Grid.Row="2" Content ="Добавить" FontSize="15" BorderThickness="0"></Button>
+        <Button x:Name="AddClient" Click="AddClient_OnClick"  Background="#FECFD2" Grid.Row="2" Content ="Добавить" FontSize="15" BorderThickness="0"></Button>
     </Grid>
 </Window>

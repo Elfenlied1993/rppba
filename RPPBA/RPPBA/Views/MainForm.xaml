@@ -9,14 +9,25 @@
       Title="MainForm"
       Background="DarkRed">
     <Window.Resources>
-        <Image x:Key="Refresh" Source="/Resources/refreshIcon.jpg"></Image>
+        <Style x:Key="HeaderStyle" TargetType="{x:Type GridViewColumnHeader}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type GridViewColumnHeader}">
+                        <TextBlock Text="{TemplateBinding Content}" Width="{TemplateBinding Width}" TextAlignment="Center" >
+                        </TextBlock>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
     </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="7*"/>
         </Grid.RowDefinitions>
-        <Button Content="Выйти" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6,3" Margin="10" Background="Red" Foreground="White"></Button>
+        <Button x:Name="Logout" Click="Logout_OnClick" Content="Выйти" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" Padding="6,3" Margin="10" Background="Red" Foreground="White"></Button>
         <TabControl Grid.Row="1" Background="#FECFD2">
             <TabControl.Resources>
                 <Style TargetType="TabItem">
@@ -55,7 +66,7 @@
                         <ColumnDefinition Width="1.5*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Создать заказ" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                    <Button x:Name="CreateOrder" Click="CreateOrder_OnClick" Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Создать заказ" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                         <Button.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="5"></Setter>
@@ -63,14 +74,14 @@
                         </Button.Resources>
                     </Button>
                     <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="0" >
-                        <Button HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Отфильтровать"  BorderThickness="0" Background="WhiteSmoke" Margin="10,5,5,5">
+                        <Button x:Name="FilterOrders" Click="FilterOrders_OnClick" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Отфильтровать"  BorderThickness="0" Background="WhiteSmoke" Margin="10,5,5,5">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"></Setter>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button Margin="5,5,0,5" BorderThickness="0" Content="{StaticResource Refresh}">
+                        <Button x:Name="RefreshOrders" Click="RefreshOrders_OnClick" Margin="5,5,0,5" BorderThickness="0" Content="{DynamicResource Refresh}">
                         </Button>
                     </StackPanel>
 
@@ -81,23 +92,8 @@
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <StackPanel Visibility="Hidden" Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
-                        <Button HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Редактировать" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="5"></Setter>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                        <Button HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Отменить" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
-                            <Button.Resources>
-                                <Style TargetType="Border">
-                                    <Setter Property="CornerRadius" Value="5"></Setter>
-                                </Style>
-                            </Button.Resources>
-                        </Button>
-                    </StackPanel>
-                    <TextBox VerticalContentAlignment="Center" Padding="10,0,0,0" Grid.Row="0" Grid.Column="3" Margin="0,5">
+
+                    <TextBox x:Name="SearchOrders" TextChanged="SearchOrders_OnTextChanged" VerticalContentAlignment="Center" Padding="10,0,0,0" Grid.Row="0" Grid.Column="3" Margin="0,5">
                         <TextBox.Resources>
                             <Style TargetType="TextBox">
                                 <Style.Triggers>
@@ -121,32 +117,86 @@
                             </Style>
                         </TextBox.Resources>
                     </TextBox>
-                    <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Background="#FECFD2">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="3*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0" Background="White">
+                    <StackPanel Visibility="Hidden" Orientation="Horizontal" Grid.Row="0" Grid.Column="1">
+                        <Button x:Name="OrdersEdit" Click="OrdersEdit_OnClick" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Редактировать" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"></Setter>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                        <Button x:Name="OrdersBack" Click="OrdersBack_OnClick" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Отменить" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"></Setter>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
+                    </StackPanel>
+                    <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Background="White">
+                        <ListView BorderThickness="0" x:Name="Orders" MouseDoubleClick="Orders_OnMouseDoubleClick">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersNumber" Width="20"></GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersId" Width="100">Номер заказа</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersClient" Width="80">Заказчик</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersSum" Width="80">Сумма</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersDate" Width="100">Дата отгрузки</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersAddress" Width="130">Адрес</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersStatus" Width="130">Статус</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersCommentary" Width="130">Комментарий</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersApprove" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button
+                                                    Content="Одобрить"
+                                                    Margin="1"
+                                                    VerticalAlignment="Center"
+                                                    Click="OrderApprove_Clicked" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrdersDecline" >
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button
+                                                    Content="Отклонить"
+                                                    Margin="1"
+                                                    VerticalAlignment="Center"
+                                                    Click="OrderDecline_Clicked" />
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                    <Grid Visibility="Hidden" x:Name="ParticularOrder" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Background="#FECFD2">
                             <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition Height="*"/>
+                                <RowDefinition Height="3*"/>
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="0" Content="Заказ №"></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="0" Content=""></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="0" Content="Дата отгрузки: "></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="1" Content="Сумма: "></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" Content="Статус: "></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="1" Content="Комментарий: "></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="2" Content="Контакты: "></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="2" Content="Телефон: "></Label>
-                            <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" Content="Адрес: "></Label>
-                        </Grid>
+                            <Grid Grid.Row="0" Background="White">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                    <ColumnDefinition/>
+                                </Grid.ColumnDefinitions>
+                                <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="0" x:Name="OrderID" Content="Заказ №"></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="0" x:Name="ClientName"  Content=""></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="0" x:Name="DepartureDate" Content="Дата отгрузки: "></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="1" x:Name="Sum" Content="Сумма: "></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" x:Name="Status" Content="Статус: "></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="1" x:Name="Commentary" Content="Комментарий: "></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="2" Content="Контакты: "></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="2" x:Name="PhoneNumber" Content="Телефон: "></Label>
+                                <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" x:Name="Address" Content="Адрес: "></Label>
+                            </Grid>
                         <TabControl Grid.Row="1" Background="LightCoral">
                             <TabControl.Resources>
                                 <Style TargetType="TabItem">
@@ -175,51 +225,47 @@
                             </TabControl.Resources>
                             <TabItem Header="Товары">
                                 <Grid Background="LightCoral">
-                                    <ListView Background="LightCoral">
+                                    <ListView BorderThickness="0" x:Name="OrderProducts" Background="LightCoral">
                                         <ListView.View>
                                             <GridView>
-                                                <GridViewColumn Width="20"></GridViewColumn>
-                                                <GridViewColumn Width="200">Наименование</GridViewColumn>
-                                                <GridViewColumn Width="100">Цена, BYN</GridViewColumn>
-                                                <GridViewColumn Width="100">Количество, шт</GridViewColumn>
-                                                <GridViewColumn Width="180">Скидка клиента, %</GridViewColumn>
-                                                <GridViewColumn Width="180">Скидка на товар %</GridViewColumn>
+                                                <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrderProductsNumber" Width="20"></GridViewColumn>
+                                                <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrderProductsName" Width="200">Наименование</GridViewColumn>
+                                                <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrderProductsCost" Width="100">Цена, BYN</GridViewColumn>
+                                                <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrderProductsCount" Width="100">Количество, шт</GridViewColumn>
+                                                <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrderProductsDiscountClient" Width="180">Скидка клиента, %</GridViewColumn>
+                                                <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrderProductsDiscountProduct" Width="180">Скидка на товар %</GridViewColumn>
+                                                <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="OrderProductsReserve">
+                                                    <GridViewColumn.CellTemplate>
+                                                        <DataTemplate>
+                                                            <Button
+                                                                Content="Одобрить"
+                                                                Margin="0"
+                                                                VerticalAlignment="Center"
+                                                                Click="OrderProductReserve_Clicked" />
+                                                        </DataTemplate>
+                                                    </GridViewColumn.CellTemplate>
+                                                </GridViewColumn>
                                             </GridView>
                                         </ListView.View>
                                     </ListView>
                                 </Grid>
                             </TabItem>
                             <TabItem Header="История">
-                                <ListView Background="LightCoral">
+                                <ListView BorderThickness="0" x:Name="History" Background="LightCoral">
                                     <ListView.View>
                                         <GridView>
-                                            <GridViewColumn Width="20"></GridViewColumn>
-                                            <GridViewColumn Width="254">Статус заказа</GridViewColumn>
-                                            <GridViewColumn Width="254">Дата и время</GridViewColumn>
-                                            <GridViewColumn Width="254">Сумма</GridViewColumn>
+                                            <GridViewColumn x:Name="HistoryNumber" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="20"></GridViewColumn>
+                                            <GridViewColumn x:Name="HistoryStatus" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="200">Статус заказа</GridViewColumn>
+                                            <GridViewColumn x:Name="HistoryDate" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="200">Дата и время</GridViewColumn>
+                                            <GridViewColumn x:Name="HistorySum" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="200">Сумма</GridViewColumn>
+                                            <GridViewColumn x:Name="HistoryComment" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="200">Комментарий</GridViewColumn>
                                         </GridView>
                                     </ListView.View>
                                 </ListView>
                             </TabItem>
                         </TabControl>
                     </Grid>
-                    <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Background="White">
-                        <ListView>
-                            <ListView.View>
-                                <GridView>
-                                    <GridViewColumn Width="20"></GridViewColumn>
-                                    <GridViewColumn Width="100">Номер заказа</GridViewColumn>
-                                    <GridViewColumn Width="80">Заказчик</GridViewColumn>
-                                    <GridViewColumn Width="80">Сумма</GridViewColumn>
-                                    <GridViewColumn Width="120">Дата отгрузки</GridViewColumn>
-                                    <GridViewColumn Width="120">Адрес</GridViewColumn>
-                                    <GridViewColumn Width="120">Статус</GridViewColumn>
-                                    <GridViewColumn Width="120">Комментарий</GridViewColumn>
-                                </GridView>
-                            </ListView.View>
-                        </ListView>
-                    </Grid>
-
+                    
                 </Grid>
             </TabItem>
             <TabItem Background="#FECFD2" Header="Клиенты">
@@ -234,26 +280,27 @@
                         <ColumnDefinition Width="1.5*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <Button Grid.Column="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
-                        <Button.Resources>
-                            <Style TargetType="Border">
-                                <Setter Property="CornerRadius" Value="5"></Setter>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                    <StackPanel Orientation="Horizontal" Grid.Column="2" Grid.Row="0" >
-                        <Button HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Отфильтровать"  BorderThickness="0" Background="WhiteSmoke" Margin="10,5,5,5">
+                    <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Button x:Name="CreateClient" Click="CreateClient_OnClick" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0" Content="Добавить" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"></Setter>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button Margin="5,5,0,5" BorderThickness="0" Content="{StaticResource Refresh}">
+                        <Button Visibility="Hidden" x:Name="DeleteClient" Click="DeleteClient_OnClick" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="5,0" Content="Удалить клиента" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="5"></Setter>
+                                </Style>
+                            </Button.Resources>
                         </Button>
                     </StackPanel>
 
-                    <TextBox VerticalContentAlignment="Center" Padding="10,0,0,0" Grid.Row="0" Grid.Column="3" Margin="0,5">
+                    <Button x:Name="RefreshClients" Click="RefreshClients_OnClick" Grid.Column="2" Grid.Row="0" HorizontalAlignment="Right" Margin="5,5,10,5" BorderThickness="0" Content="{DynamicResource Refresh}">
+                    </Button>
+
+                    <TextBox x:Name="SearchClients" TextChanged="SearchClients_OnTextChanged" VerticalContentAlignment="Center" Padding="10,0,0,0" Grid.Row="0" Grid.Column="3" Margin="0,5">
                         <TextBox.Resources>
                             <Style TargetType="TextBox">
                                 <Style.Triggers>
@@ -278,17 +325,57 @@
                         </TextBox.Resources>
                     </TextBox>
                     <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4" Background="White">
-                        <ListView>
+                        <ListView BorderThickness="0">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Width="20"></GridViewColumn>
-                                    <GridViewColumn Width="100">Наименование</GridViewColumn>
-                                    <GridViewColumn Width="80">Счёт</GridViewColumn>
-                                    <GridViewColumn Width="120">Представитель</GridViewColumn>
-                                    <GridViewColumn Width="120">Телефон</GridViewColumn>
-                                    <GridViewColumn Width="120">Адрес</GridViewColumn>
-                                    <GridViewColumn Width="120">Скидка</GridViewColumn>
-                                    <GridViewColumn Width="120">Баланс</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="20"></GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="100">Наименование</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="80">Счёт</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="120">Представитель</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="120">Телефон</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="120">Адрес</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="120">Скидка</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" Width="120">Баланс</GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                    </Grid>
+                    <Grid x:Name="ParticularClient" Visibility="Hidden" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="3*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0" Background="White">
+                            <Grid.RowDefinitions>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                                <RowDefinition/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="0" x:Name="ClientsName" Content=""></Label>
+                            <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="0" x:Name="ClientsBank"  Content="Счёт:"></Label>
+                            <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="0" x:Name="ClientsContact" Content="Представитель: "></Label>
+                            <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="1" x:Name="ClientsBalance" Content="Баланс: "></Label>
+                            <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="1" x:Name="ClientsDiscount" Content="Скидка: "></Label>
+                            <Label Margin="5,0,0,0" Grid.Row="0" Grid.Column="2" Content="Контакты: "></Label>
+                            <Label Margin="5,0,0,0" Grid.Row="1" Grid.Column="2" x:Name="ClientsPhone" Content="Телефон: "></Label>
+                            <Label Margin="5,0,0,0" Grid.Row="2" Grid.Column="2" x:Name="ClientsAddress" Content="Адрес: "></Label>
+                        </Grid>
+                        <ListView x:Name="ClientOrders" BorderThickness="0" Grid.Row="1" Grid.Column="0">
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientNumber" Width="20"></GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientOrdersId" Width="100">Номер заказа</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientOrdersClient" Width="80">Заказчик</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientOrdersSum" Width="80">Сумма</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientOrdersDate" Width="100">Дата отгрузки</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientOrdersAddress" Width="130">Адрес</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientOrdersStatus" Width="130">Статус</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ClientOrdersCommentary" Width="130">Комментарий</GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
@@ -308,22 +395,22 @@
                         <ColumnDefinition Width="1.5*"/>
                         <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2">
-                        <Button Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Создать заказ" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                    <StackPanel x:Name="ProductButtons" Visibility="Hidden" Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2">
+                        <Button x:Name="CreateProduct" Click="CreateProduct_OnClick" Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Добавить" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"></Setter>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Обновить цены" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                        <Button x:Name="UpdateCost" Click="UpdateCost_OnClick" Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Обновить цены" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"></Setter>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Обновить количество" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                        <Button x:Name="UpdateCount" Click="UpdateCount_OnClick" Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Обновить количество" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"></Setter>
@@ -333,17 +420,17 @@
                     </StackPanel>
 
                     <StackPanel Orientation="Horizontal" Grid.Column="3" Grid.Row="0" >
-                        <Button HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Отфильтровать"  BorderThickness="0" Background="WhiteSmoke" Margin="10,5,5,5">
+                        <Button x:Name="FilterProducts" Click="FilterProducts_OnClick" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Отфильтровать"  BorderThickness="0" Background="WhiteSmoke" Margin="10,5,5,5">
                             <Button.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="5"></Setter>
                                 </Style>
                             </Button.Resources>
                         </Button>
-                        <Button Margin="5" BorderThickness="0" Content="{StaticResource Refresh}">
+                        <Button x:Name="RefreshProducts" Margin="5" BorderThickness="0" Content="{DynamicResource Refresh}">
                         </Button>
                     </StackPanel>
-                    <TextBox VerticalContentAlignment="Center" Padding="10,0,0,0" Grid.Row="0" Grid.Column="4" Margin="0,5">
+                    <TextBox x:Name="SearchProducts" TextChanged="SearchProducts_OnTextChanged" VerticalContentAlignment="Center" Padding="10,0,0,0" Grid.Row="0" Grid.Column="4" Margin="0,5">
                         <TextBox.Resources>
                             <Style TargetType="TextBox">
                                 <Style.Triggers>
@@ -368,21 +455,21 @@
                         </TextBox.Resources>
                     </TextBox>
                     <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5" Background="White">
-                        <ListView>
+                        <ListView BorderThickness="0" x:Name="Products">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Width="20"></GridViewColumn>
-                                    <GridViewColumn Width="120">Наименование</GridViewColumn>
-                                    <GridViewColumn Width="100">Цена</GridViewColumn>
-                                    <GridViewColumn Width="120">Произведено</GridViewColumn>
-                                    <GridViewColumn Width="140">Продано</GridViewColumn>
-                                    <GridViewColumn Width="140">Текущий остаток</GridViewColumn>
-                                    <GridViewColumn Width="150">Зарезервировано</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ProductsNumber" Width="20"></GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ProductsName" Width="120">Наименование</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ProductsCost" Width="100">Цена</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ProductsCreated" Width="120">Произведено</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ProductsSold" Width="140">Продано</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ProductsLeft" Width="140">Текущий остаток</GridViewColumn>
+                                    <GridViewColumn HeaderContainerStyle="{StaticResource HeaderStyle}" x:Name="ProductsReserved" Width="150">Зарезервировано</GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
                     </Grid>
-                    <Grid Visibility="Hidden" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5">
+                    <Grid x:Name="ParticularProduct" Visibility="Hidden" Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Grid.ColumnSpan="5">
                         <Grid.RowDefinitions>
                             <RowDefinition/>
                             <RowDefinition Height="10*"/>
@@ -395,14 +482,14 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" Grid.Column="0" Grid.ColumnSpan="2">
-                            <Button Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Редактировать данные" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                            <Button x:Name="EditProduct" Click="EditProduct_OnClick" Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Редактировать данные" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="5"></Setter>
                                     </Style>
                                 </Button.Resources>
                             </Button>
-                            <Button Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Удалить товар" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
+                            <Button x:Name="DeleteProduct" Click="DeleteProduct_OnClick" Padding="5,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Удалить товар" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                                 <Button.Resources>
                                     <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="5"></Setter>
@@ -410,7 +497,7 @@
                                 </Button.Resources>
                             </Button>
                         </StackPanel>
-                        <Button Grid.Column="4" Grid.Row="0" HorizontalAlignment="Right" Margin="5" BorderThickness="0" Content="{StaticResource Refresh}">
+                        <Button x:Name="RefreshProduct" Grid.Column="4" Grid.Row="0" HorizontalAlignment="Right" Margin="5" BorderThickness="0" Content="{DynamicResource Refresh}">
                         </Button>
                         <Grid Background="White" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="5">
                             <Grid.RowDefinitions>
@@ -422,9 +509,9 @@
                                 <ColumnDefinition Width="3*"/>
                                 <ColumnDefinition/>
                             </Grid.ColumnDefinitions>
-                            <Label Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Left" FontSize="15" Margin="15,0,0,0"></Label>
-                            <Label Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Left" FontSize="15" Margin="15,0,0,0">Описание:</Label>
-                            <Label Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="15" Margin="15,0,0,0">Цена:</Label>
+                            <Label x:Name="ProductName" Grid.Row="0" Grid.Column="0" HorizontalContentAlignment="Left" FontSize="15" Margin="15,0,0,0"></Label>
+                            <Label x:Name="ProductDescription" Grid.Row="1" Grid.Column="0" HorizontalContentAlignment="Left" FontSize="15" Margin="15,0,0,0">Описание:</Label>
+                            <Label x:Name="ProductCost" Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Left" FontSize="15" Margin="15,0,0,0">Цена:</Label>
                             <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
                                 <Grid.RowDefinitions>
                                     <RowDefinition/>
@@ -444,11 +531,10 @@
                                 <Label Grid.Row="3" Grid.Column="0" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="0,1,1,1" VerticalContentAlignment="Center" FontSize="15" >Текущий остаток</Label>
                                 <Label Grid.Row="4" Grid.Column="0" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="0,1,1,1" VerticalContentAlignment="Center" FontSize="15" >Зарезервировано</Label>
                                 <Label Grid.Row="0" Grid.Column="1" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="15" >Количество</Label>
-                                <Label Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,2,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
-                                <Label Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,1,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
-                                <Label Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,1,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
-                                <Label Grid.Row="4" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,1,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
-
+                                <Label x:Name="ProductCreated" Grid.Row="1" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,2,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
+                                <Label x:Name="ProductSold" Grid.Row="2" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,1,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
+                                <Label x:Name="ProductLeft" Grid.Row="3" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,1,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
+                                <Label x:Name="ProductReserved" Grid.Row="4" Grid.Column="1" HorizontalContentAlignment="Center" BorderBrush="Black" BorderThickness="1,1,0,1" VerticalContentAlignment="Center" FontSize="15" ></Label>
                             </Grid>
                         </Grid>
                     </Grid>
@@ -474,7 +560,7 @@
                             </Style>
                         </Button.Resources>
                     </Button>
-                    <Button Grid.Row="0" Content="{StaticResource Refresh}" Grid.Column="2" Background="Transparent" HorizontalAlignment="Right" BorderThickness="0" Margin="5"></Button>
+                    <Button Grid.Row="0" Content="{DynamicResource Refresh}" Grid.Column="2" Background="Transparent" HorizontalAlignment="Right" BorderThickness="0" Margin="5"></Button>
                     <Button Grid.Column="3" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Content="Сохранить" Grid.Row="0" BorderThickness="0" Background="WhiteSmoke" Margin="5">
                         <Button.Resources>
                             <Style TargetType="Border">
@@ -488,15 +574,42 @@
                             <ColumnDefinition Width="3*"/>
                             <ColumnDefinition Width="1.2*"/>
                         </Grid.ColumnDefinitions>
-                        <ListView Grid.Column="1" Grid.ColumnSpan="2">
+                        <ListView BorderThickness="0" Grid.Column="1" Grid.ColumnSpan="2">
                             <ListView.View>
                                 <GridView>
-                                    <GridViewColumn Width="156">Начало, BYN</GridViewColumn>
-                                    <GridViewColumn Width="156">Конец, BYN</GridViewColumn>
-                                    <GridViewColumn Width="156">Сумма, %</GridViewColumn>
+                                    <GridViewColumn x:Name="LoyaltyStart" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="156">Начало, BYN</GridViewColumn>
+                                    <GridViewColumn x:Name="LoyaltyEnd" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="156">Конец, BYN</GridViewColumn>
+                                    <GridViewColumn x:Name="LoyaltyDiscount" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="156">Скидка, %</GridViewColumn>
+                                    <GridViewColumn x:Name="LoyaltyButtons" HeaderContainerStyle="{StaticResource HeaderStyle}" Width="200">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button
+                                                    Content="-"
+                                                    Margin="0"
+                                                    Width="20" Height="20"
+                                                    Padding="-1,-2,0,0"
+                                                    VerticalAlignment="Center"
+                                                    HorizontalAlignment="Left"
+                                                    Click="DiscountDelete_Clicked" >
+                                                    <Button.Resources>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="CornerRadius" Value="10"></Setter>
+                                                        </Style>
+                                                    </Button.Resources>
+                                                </Button>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
                                 </GridView>
                             </ListView.View>
                         </ListView>
+                        <Button FontSize="15" Padding="-1,-2,0,0" x:Name="AddDiscount" HorizontalContentAlignment="Center" Content="+" Grid.Column="1" VerticalAlignment="Top" Margin="0,0,20,0"  HorizontalAlignment="Right" Width="20" Height="20">
+                            <Button.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="10"></Setter>
+                                </Style>
+                            </Button.Resources>
+                        </Button>
                     </Grid>
                 </Grid>
             </TabItem>

@@ -21,5 +21,10 @@ namespace RPPBA.Views
         {
             InitializeComponent();
         }
+
+        private void CreateProduct_OnClick(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

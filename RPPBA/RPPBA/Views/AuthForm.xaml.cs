@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using RPPBA.Models;
+using RPPBA.Views;
 
 namespace RPPBA
 {
@@ -20,9 +22,27 @@ namespace RPPBA
     /// </summary>
     public partial class MainWindow : Window
     {
+
         public MainWindow()
         {
             InitializeComponent();
+        }
+
+        private void LoginButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            using (var entities = new RPPBAContext())
+            {
+                if (entities.System.Any(x => x.Login.ToLower().Equals(Login.Text.ToLower()) && x.Password.Equals(Password.Password)))
+                {
+                    MainForm mainForm = new MainForm(entities.System.First(x=>x.Login.ToLower().Equals(Login.Text.ToLower())));
+                    mainForm.Show();
+                    this.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Ошибка входа. Проверьте введенные данные");
+                }
+            }
         }
     }
 }
