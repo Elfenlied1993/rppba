@@ -8,64 +8,42 @@ namespace RPPBA.TableModels
 {
     public partial class OrderHistoryModel : INotifyPropertyChanged
     {
-        private int _historyId;
-        private int _orderId;
-        private Status _orderStatus;
-        private DateTime _updateTime;
-        private int _amountTransfer;
+        private int _id;
+        private int _number;
+        private DateTime _date;
         private string _comment;
+        private string _status;
+        private string _sum;
 
-        public int HistoryId
+        public int Id
         {
-            get => _historyId;
+            get => _id;
             set
             {
-                if (value == _historyId) return;
-                _historyId = value;
+                if (value == _id) return;
+                _id = value;
                 OnPropertyChanged();
             }
         }
 
-        public int OrderId
+        public int Number
         {
-            get => _orderId;
+            get => _number;
             set
             {
-                if (value == _orderId) return;
-                _orderId = value;
+                if (value == _number) return;
+                _number = value;
                 OnPropertyChanged();
             }
         }
 
-        public Status OrderStatus
+        public DateTime Date
         {
-            get => _orderStatus;
+            get => _date;
             set
             {
-                if (value == _orderStatus) return;
-                _orderStatus = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public DateTime UpdateTime
-        {
-            get => _updateTime;
-            set
-            {
-                if (value.Equals(_updateTime)) return;
-                _updateTime = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int AmountTransfer
-        {
-            get => _amountTransfer;
-            set
-            {
-                if (value == _amountTransfer) return;
-                _amountTransfer = value;
+                if (value.Equals(_date)) return;
+                _date = value;
                 OnPropertyChanged();
             }
         }
@@ -77,6 +55,28 @@ namespace RPPBA.TableModels
             {
                 if (value == _comment) return;
                 _comment = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Status
+        {
+            get => _status;
+            set
+            {
+                if (value == _status) return;
+                _status = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Sum
+        {
+            get => _sum;
+            set
+            {
+                if (value == _sum) return;
+                _sum = value;
                 OnPropertyChanged();
             }
         }

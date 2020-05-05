@@ -27,7 +27,7 @@ namespace RPPBA.Models
         public virtual DbSet<Products> Products { get; set; }
         public virtual DbSet<Regions> Regions { get; set; }
         public virtual DbSet<System> System { get; set; }
-
+        public virtual DbSet<DiscountProgram> DiscountPrograms { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
@@ -38,16 +38,18 @@ namespace RPPBA.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasAnnotation("Relational:DefaultSchema", "u1042103_kseniya");
+
             modelBuilder.Entity<Addresses>(entity =>
             {
                 entity.HasKey(e => e.AddressId)
                     .HasName("addresses_pk");
 
-                entity.ToTable("addresses");
+                entity.ToTable("addresses", "dbo");
 
                 entity.Property(e => e.AddressId)
                     .HasColumnName("address_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.BuildingInt)
                     .HasColumnName("building_INT")
@@ -73,13 +75,15 @@ namespace RPPBA.Models
                 entity.HasKey(e => e.OrganizationId)
                     .HasName("balance_pk");
 
-                entity.ToTable("balance");
+                entity.ToTable("balance", "dbo");
 
                 entity.Property(e => e.OrganizationId)
                     .HasColumnName("organization_id")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.CurrentBalance).HasColumnName("current_balance");
+                entity.Property(e => e.CurrentBalance)
+                    .HasColumnName("current_balance")
+                    .HasColumnType("numeric(15, 2)");
 
                 entity.HasOne(d => d.Organization)
                     .WithOne(p => p.Balance)
@@ -87,33 +91,17 @@ namespace RPPBA.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("table_9_organizations_fk");
             });
-            modelBuilder.Entity<DiscountProgram>(entity =>
-            {
-                entity.HasKey(e => e.DiscountId)
-                    .HasName("PK__discount__BDBE9EF977B6E5F1");
 
-                entity.ToTable("discount_program", "dbo");
-
-                entity.Property(e => e.DiscountId)
-                    .HasColumnName("discount_id")
-                    .ValueGeneratedNever();
-
-                entity.Property(e => e.Discount).HasColumnName("discount");
-
-                entity.Property(e => e.EndSum).HasColumnName("end_sum");
-
-                entity.Property(e => e.StartSum).HasColumnName("start_sum");
-            });
             modelBuilder.Entity<Cities>(entity =>
             {
                 entity.HasKey(e => e.CityId)
                     .HasName("cities_pk");
 
-                entity.ToTable("cities");
+                entity.ToTable("cities", "dbo");
 
                 entity.Property(e => e.CityId)
                     .HasColumnName("city_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CityName)
                     .HasColumnName("city_name")
@@ -134,11 +122,11 @@ namespace RPPBA.Models
                 entity.HasKey(e => e.CountryId)
                     .HasName("countries_pk");
 
-                entity.ToTable("countries");
+                entity.ToTable("countries", "dbo");
 
                 entity.Property(e => e.CountryId)
                     .HasColumnName("country_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.CountryName)
                     .HasColumnName("country_name")
@@ -154,16 +142,38 @@ namespace RPPBA.Models
                     .HasConstraintName("table_5_regions_fk");
             });
 
+            modelBuilder.Entity<DiscountProgram>(entity =>
+            {
+                entity.HasKey(e => e.DiscountId)
+                    .HasName("PK__discount__BDBE9EF977B6E5F1");
+
+                entity.ToTable("discount_program", "dbo");
+
+                entity.Property(e => e.DiscountId)
+                    .HasColumnName("discount_id")
+                    .ValueGeneratedOnAdd();
+
+                entity.Property(e => e.Discount).HasColumnName("discount");
+
+                entity.Property(e => e.EndSum)
+                    .HasColumnName("end_sum")
+                    .HasColumnType("numeric(15, 2)");
+
+                entity.Property(e => e.StartSum)
+                    .HasColumnName("start_sum")
+                    .HasColumnType("numeric(15, 2)");
+            });
+
             modelBuilder.Entity<Discounts>(entity =>
             {
                 entity.HasKey(e => e.OrganizationId)
                     .HasName("discounts_pk");
 
-                entity.ToTable("discounts");
+                entity.ToTable("discounts", "dbo");
 
                 entity.Property(e => e.OrganizationId)
                     .HasColumnName("organization_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Discount).HasColumnName("discount");
 
@@ -179,11 +189,11 @@ namespace RPPBA.Models
                 entity.HasKey(e => e.TransactionId)
                     .HasName("order_basket_pk");
 
-                entity.ToTable("order_basket");
+                entity.ToTable("order_basket", "dbo");
 
                 entity.Property(e => e.TransactionId)
                     .HasColumnName("transaction_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OrderId).HasColumnName("order_id");
 
@@ -191,7 +201,9 @@ namespace RPPBA.Models
 
                 entity.Property(e => e.Quantity).HasColumnName("quantity");
 
-                entity.Property(e => e.TotalSale).HasColumnName("total_sale");
+                entity.Property(e => e.TotalSale)
+                    .HasColumnName("total_sale")
+                    .HasColumnType("numeric(15, 2)");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.OrderBasketOrder)
@@ -214,13 +226,15 @@ namespace RPPBA.Models
 
             modelBuilder.Entity<OrderHistory>(entity =>
             {
-                entity.ToTable("order_history");
+                entity.ToTable("order_history", "dbo");
 
                 entity.Property(e => e.OrderHistoryId)
                     .HasColumnName("order_history_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
-                entity.Property(e => e.AmountTransfer).HasColumnName("amount_transfer");
+                entity.Property(e => e.AmountTransfer)
+                    .HasColumnName("amount_transfer")
+                    .HasColumnType("numeric(15, 2)");
 
                 entity.Property(e => e.Comment)
                     .HasColumnName("comment")
@@ -250,11 +264,11 @@ namespace RPPBA.Models
                 entity.HasKey(e => e.TransactionId)
                     .HasName("orders_pk");
 
-                entity.ToTable("orders");
+                entity.ToTable("orders", "dbo");
 
                 entity.Property(e => e.TransactionId)
                     .HasColumnName("transaction_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.AddressId).HasColumnName("address_id");
 
@@ -280,7 +294,9 @@ namespace RPPBA.Models
                     .HasColumnName("shipping_date")
                     .HasColumnType("date");
 
-                entity.Property(e => e.TotalSale).HasColumnName("total_sale");
+                entity.Property(e => e.TotalSale)
+                    .HasColumnName("total_sale")
+                    .HasColumnType("numeric(15, 2)");
 
                 entity.HasOne(d => d.Address)
                     .WithMany(p => p.Orders)
@@ -300,11 +316,11 @@ namespace RPPBA.Models
                 entity.HasKey(e => e.OrganizationId)
                     .HasName("organizations_pk");
 
-                entity.ToTable("organizations");
+                entity.ToTable("organizations", "dbo");
 
                 entity.Property(e => e.OrganizationId)
                     .HasColumnName("organization_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.OrganizationAddressId).HasColumnName("organization_address_id");
 
@@ -340,11 +356,11 @@ namespace RPPBA.Models
                 entity.HasKey(e => e.ProductId)
                     .HasName("products_pk");
 
-                entity.ToTable("products");
+                entity.ToTable("products", "dbo");
 
                 entity.Property(e => e.ProductId)
                     .HasColumnName("product_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.ProductAvailableQuantity).HasColumnName("product_available_quantity");
 
@@ -361,6 +377,7 @@ namespace RPPBA.Models
                 entity.Property(e => e.ProductPrice).HasColumnName("product_price");
 
                 entity.Property(e => e.ProductReservedQuantity).HasColumnName("product_reserved_quantity");
+                entity.Property(e => e.ProductSoldQuantity).HasColumnName("product_sold_quantity");
             });
 
             modelBuilder.Entity<Regions>(entity =>
@@ -368,11 +385,11 @@ namespace RPPBA.Models
                 entity.HasKey(e => e.RegionId)
                     .HasName("regions_pk");
 
-                entity.ToTable("regions");
+                entity.ToTable("regions", "dbo");
 
                 entity.Property(e => e.RegionId)
                     .HasColumnName("region_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.RegionName)
                     .HasColumnName("region_name")
@@ -382,11 +399,11 @@ namespace RPPBA.Models
 
             modelBuilder.Entity<System>(entity =>
             {
-                entity.ToTable("system");
+                entity.ToTable("system", "dbo");
 
                 entity.Property(e => e.SystemId)
                     .HasColumnName("system_id")
-                    .ValueGeneratedNever();
+                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Login)
                     .HasColumnName("login")

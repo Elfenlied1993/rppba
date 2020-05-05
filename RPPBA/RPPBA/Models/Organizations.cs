@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RPPBA.Models
 {
@@ -9,8 +9,8 @@ namespace RPPBA.Models
         {
             Orders = new HashSet<Orders>();
         }
-
-        public int OrganizationId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? OrganizationId { get; set; }
         public string OrganizationName { get; set; }
         public string OrganizationDirectorFullname { get; set; }
         public string OrganizationPaymentAccount { get; set; }

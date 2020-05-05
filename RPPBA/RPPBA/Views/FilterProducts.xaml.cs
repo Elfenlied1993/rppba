@@ -17,9 +17,11 @@ namespace RPPBA.Views
     /// </summary>
     public partial class FilterProducts : Window
     {
-        public FilterProducts()
+        private MainForm mainForm;
+        public FilterProducts(MainForm mainForm)
         {
             InitializeComponent();
+            this.mainForm = mainForm;
         }
 
         private void Filter_OnClick(object sender, RoutedEventArgs e)

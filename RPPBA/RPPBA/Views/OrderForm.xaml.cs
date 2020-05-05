@@ -9,6 +9,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using RPPBA.TableModels;
 
 namespace RPPBA.Views
 {
@@ -17,13 +18,20 @@ namespace RPPBA.Views
     /// </summary>
     public partial class OrderForm : Window
     {
-        public OrderForm()
+        private MainForm mainForm;
+        public OrderForm(MainForm mainForm)
         {
             InitializeComponent();
+            this.mainForm = mainForm;
         }
-
+        public OrderForm(OrdersModel model, MainForm mainForm)
+        {
+            InitializeComponent();
+            this.mainForm = mainForm;
+        }
         private void AddOrder_OnClick(object sender, RoutedEventArgs e)
         {
+            //Статус - в обработке
             throw new NotImplementedException();
         }
 

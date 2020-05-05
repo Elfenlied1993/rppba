@@ -17,9 +17,11 @@ namespace RPPBA.Views
     /// </summary>
     public partial class FilterOrders : Window
     {
-        public FilterOrders()
+        private MainForm mainForm;
+        public FilterOrders(MainForm mainForm)
         {
             InitializeComponent();
+            this.mainForm = mainForm;
         }
 
         private void Filter_OnClick(object sender, RoutedEventArgs e)

@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RPPBA.Models
 {
@@ -10,7 +10,8 @@ namespace RPPBA.Models
             Cities = new HashSet<Cities>();
         }
 
-        public int CountryId { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? CountryId { get; set; }
         public string CountryName { get; set; }
         public int RegionId { get; set; }
 

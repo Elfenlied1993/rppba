@@ -2,118 +2,107 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Security.RightsManagement;
 using RPPBA.Annotations;
 
 namespace RPPBA.TableModels
 {
     public partial class OrdersModel : INotifyPropertyChanged
     {
-        private int _transactionId;
-        private int _orderId;
-        private int _organizationId;
-        private int _addressId;
-        private DateTime _shippingDate;
-        private Status _status;
-        private int _totalSale;
-        private int _discount;
-        private int _extraDiscount;
+        private int _id;
+        private int _number;
+        private string _client;
+        private decimal _sum;
+        private DateTime _date;
+        private string _address;
+        private string _status;
         private string _comment;
-        public List<int> OrderBasketsId;
-        public int TransactionId
+        private string _phone;
+
+        public string Phone
         {
-            get => _transactionId;
+            get => _phone;
             set
             {
-                if (value == _transactionId) return;
-                _transactionId = value;
+                if (value == _phone) return;
+                _phone = value;
                 OnPropertyChanged();
             }
         }
 
-        public int OrderId
+        public int Id
         {
-            get => _orderId;
+            get => _id;
             set
             {
-                if (value == _orderId) return;
-                _orderId = value;
+                if (value == _id) return;
+                _id = value;
                 OnPropertyChanged();
             }
         }
 
-        public int OrganizationId
+        public int Number
         {
-            get => _organizationId;
+            get => _number;
             set
             {
-                if (value == _organizationId) return;
-                _organizationId = value;
+                if (value == _number) return;
+                _number = value;
                 OnPropertyChanged();
             }
         }
 
-        public int AddressId
+        public string Client
         {
-            get => _addressId;
+            get => _client;
             set
             {
-                if (value == _addressId) return;
-                _addressId = value;
+                if (value == _client) return;
+                _client = value;
                 OnPropertyChanged();
             }
         }
 
-        public DateTime ShippingDate
+        public decimal Sum
         {
-            get => _shippingDate;
+            get => _sum;
             set
             {
-                if (value.Equals(_shippingDate)) return;
-                _shippingDate = value;
+                if (value == _sum) return;
+                _sum = value;
                 OnPropertyChanged();
             }
         }
 
-        public Status Status
+        public DateTime Date
+        {
+            get => _date;
+            set
+            {
+                if (value.Equals(_date)) return;
+                _date = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Address
+        {
+            get => _address;
+            set
+            {
+                if (value == _address) return;
+                _address = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Status
         {
             get => _status;
             set
             {
                 if (value == _status) return;
                 _status = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int TotalSale
-        {
-            get => _totalSale;
-            set
-            {
-                if (value == _totalSale) return;
-                _totalSale = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int Discount
-        {
-            get => _discount;
-            set
-            {
-                if (value == _discount) return;
-                _discount = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int ExtraDiscount
-        {
-            get => _extraDiscount;
-            set
-            {
-                if (value == _extraDiscount) return;
-                _extraDiscount = value;
                 OnPropertyChanged();
             }
         }
@@ -136,10 +125,5 @@ namespace RPPBA.TableModels
        {
            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
        }
-    }
-
-    public enum Status
-    {
-
     }
 }

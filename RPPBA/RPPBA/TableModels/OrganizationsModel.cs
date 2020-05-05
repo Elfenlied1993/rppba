@@ -8,12 +8,26 @@ namespace RPPBA.TableModels
 {
     public partial class OrganizationsModel : INotifyPropertyChanged
     {
+        private decimal _balance;
+        private string _discount;
+        private string _address;
+        private string _director;
+        private string _phone;
+        private string _account;
+        private int _number;
         private int _id;
         private string _name;
-        private string _director;
-        private string _payment;
-        private string _phone;
-        private int _addressId;
+
+        public string Name
+        {
+            get => _name;
+            set
+            {
+                if (value == _name) return;
+                _name = value;
+                OnPropertyChanged();
+            }
+        }
 
         public int Id
         {
@@ -26,13 +40,24 @@ namespace RPPBA.TableModels
             }
         }
 
-        public string Name
+        public int Number
         {
-            get => _name;
+            get => _number;
             set
             {
-                if (value == _name) return;
-                _name = value;
+                if (value == _number) return;
+                _number = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Account
+        {
+            get => _account;
+            set
+            {
+                if (value == _account) return;
+                _account = value;
                 OnPropertyChanged();
             }
         }
@@ -48,17 +73,6 @@ namespace RPPBA.TableModels
             }
         }
 
-        public string Payment
-        {
-            get => _payment;
-            set
-            {
-                if (value == _payment) return;
-                _payment = value;
-                OnPropertyChanged();
-            }
-        }
-
         public string Phone
         {
             get => _phone;
@@ -70,13 +84,35 @@ namespace RPPBA.TableModels
             }
         }
 
-        public int AddressId
+        public string Address
         {
-            get => _addressId;
+            get => _address;
             set
             {
-                if (value == _addressId) return;
-                _addressId = value;
+                if (value == _address) return;
+                _address = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string Discount
+        {
+            get => _discount;
+            set
+            {
+                if (value == _discount) return;
+                _discount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public decimal Balance
+        {
+            get => _balance;
+            set
+            {
+                if (value == _balance) return;
+                _balance = value;
                 OnPropertyChanged();
             }
         }

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using AutoMapper;
 
 namespace RPPBA
 {
@@ -13,5 +14,10 @@ namespace RPPBA
     /// </summary>
     public partial class App : Application
     {
+        static App()
+        {
+     
+
+        }
     }
 }

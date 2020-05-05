@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RPPBA.Models
 {
     public partial class DiscountProgram
     {
-        public int DiscountId { get; set; }
-        public int? StartSum { get; set; }
-        public int? EndSum { get; set; }
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? DiscountId { get; set; }
+        public decimal? StartSum { get; set; }
+        public decimal? EndSum { get; set; }
         public int? Discount { get; set; }
     }
 }

@@ -8,20 +8,44 @@ namespace RPPBA.TableModels
 {
     public partial class ProductsModel : INotifyPropertyChanged
     {
-        private int _id;
+        private int _number;
+        private decimal _cost;
         private string _name;
+        private int _id;
+        private int _completed;
+        private int _sold;
+        private int _left;
+        private int _reserved;
         private string _description;
-        private int _price;
-        private int _availableQuantity;
-        private int _reservedQuantity;
 
-        public int Id
+        public string Description
         {
-            get => _id;
+            get => _description;
             set
             {
-                if (value == _id) return;
-                _id = value;
+                if (value == _description) return;
+                _description = value;
+                OnPropertyChanged();
+            }
+        }
+        public int Number
+        {
+            get => _number;
+            set
+            {
+                if (value == _number) return;
+                _number = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public decimal Cost
+        {
+            get => _cost;
+            set
+            {
+                if (value == _cost) return;
+                _cost = value;
                 OnPropertyChanged();
             }
         }
@@ -37,46 +61,57 @@ namespace RPPBA.TableModels
             }
         }
 
-        public string Description
+        public int Id
         {
-            get => _description;
+            get => _id;
             set
             {
-                if (value == _description) return;
-                _description = value;
+                if (value == _id) return;
+                _id = value;
                 OnPropertyChanged();
             }
         }
 
-        public int Price
+        public int Completed
         {
-            get => _price;
+            get => _completed;
             set
             {
-                if (value == _price) return;
-                _price = value;
+                if (value == _completed) return;
+                _completed = value;
                 OnPropertyChanged();
             }
         }
 
-        public int AvailableQuantity
+        public int Sold
         {
-            get => _availableQuantity;
+            get => _sold;
             set
             {
-                if (value == _availableQuantity) return;
-                _availableQuantity = value;
+                if (value == _sold) return;
+                _sold = value;
                 OnPropertyChanged();
             }
         }
 
-        public int ReservedQuantity
+        public int Left
         {
-            get => _reservedQuantity;
+            get => _left;
             set
             {
-                if (value == _reservedQuantity) return;
-                _reservedQuantity = value;
+                if (value == _left) return;
+                _left = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int Reserved
+        {
+            get => _reserved;
+            set
+            {
+                if (value == _reserved) return;
+                _reserved = value;
                 OnPropertyChanged();
             }
         }
